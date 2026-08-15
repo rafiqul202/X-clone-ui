@@ -2,8 +2,10 @@ import React from "react";
 import ImageKit from "./ImageKit";
 import PostInfo from "./PostInfo";
 import PostInteractions from "./PostInteractions";
+import { getFileDetails } from "@/actions";
 
-const Post = () => {
+const Post = async () => {
+  const fileDetails = await getFileDetails("6a806da05c7cd75eb8d00039");
   return (
     <div className="p-4 border-y-[1px] border-borderGray">
       {/* Post tyoe */}
@@ -49,13 +51,17 @@ const Post = () => {
               Lorem, ipsum dolor sit amet consectetur adipisicing elit.
               Voluptatibus, voluptatem!
             </p>
-            <ImageKit
-              path="general/general/post.jpeg"
-              alt="post"
-              w={600}
-              h={600}
-              className="rounded-md"
-            />
+            {fileDetails && (
+              <ImageKit
+                path={fileDetails.filePath}
+                alt="post"
+                w={fileDetails.width}
+                h={fileDetails.height}
+                className={
+                  fileDetails?.customMetadata?.sensitive ? "blur-lg" : ""
+                }
+              />
+            )}
             <PostInteractions />
           </div>
         </div>

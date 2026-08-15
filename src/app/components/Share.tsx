@@ -8,13 +8,28 @@ import {
   ImageKitUploadNetworkError,
   upload,
 } from "@imagekit/next";
+import Image from "next/image";
+import ImageEditor from "./ImageEditor";
 
 const Share = () => {
   const [media, setMedia] = useState<File | null>(null);
+  const [isEditorOpen, setIsEditorOpen] = useState(false);
+  const [setting, setSetting] = useState<{
+    type: "original" | "wide" | "square";
+    sensitive: boolean;
+  }>({
+    type: "original",
+    sensitive: false,
+  });
   const [progress, setProgress] = useState(0);
+
+  console.log(media);
 
   const abortController = new AbortController();
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const previewUrl = media ? URL.createObjectURL(media) : null;
+
   const authentication = async () => {
     try {
       const response = await fetch("/api/upload-auth");
@@ -33,11 +48,11 @@ const Share = () => {
     }
   };
 
-  // const handleMediaChange = (e:React.ChangeEvent<HTMLInputElement>) => {
-  //   if (e.target.files && e.target.files[0]) {
-  //   setMedia(e.target.files[0])
-  // }
-  // }
+  const handleMediaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setMedia(e.target.files[0]);
+    }
+  };
 
   // handle the the file upload process.
 
@@ -62,6 +77,14 @@ const Share = () => {
 
     // Call the ImageKit SDK upload function with the required parameters and callbacks.
 
+    const transformation = `w-600, ${
+      setting.type === "square"
+        ? "ar-1-1"
+        : setting.type === "wide"
+          ? "ar-16-9"
+          : ""
+    }`;
+
     try {
       const uploadResponse = await upload({
         // authentication parameters.
@@ -71,7 +94,13 @@ const Share = () => {
         publicKey,
         file,
         fileName: file.name,
-        folder:"/posts",
+        folder: "/posts",
+        transformation: {
+          pre: transformation,
+        },
+        customMetadata: {
+          sensitive: setting.sensitive,
+        },
         // Progress callback to update upload progress state
         onProgress: (event) => {
           setProgress((event.loaded / event.total) * 100);
@@ -112,9 +141,46 @@ const Share = () => {
       <div className="flex-1 flex-col gap-4 ">
         <input
           type="text"
+          name="desc"
           placeholder="What's is happening?!"
           className="bg-transparent outline-none placeholder:text-textGray text-xl"
         />
+        {/* preview image */}
+        {media?.type.includes("image") && previewUrl && (
+          <div className="relative rounded-xl overflow-hidden">
+            <Image
+              src={previewUrl}
+              alt="preview Image"
+              width={600}
+              height={600}
+            />
+            <div
+              className="absolute top-2 left-2 bg-black bg-opacity-50 text-white py-1 px-4 rounded-full font-bold text-sm cursor-pointer"
+              onClick={() => setIsEditorOpen(true)}
+            >
+              Edit
+            </div>
+            <div className="absolute top-2  right-2 bg-black bg-opacity-50 text-white h-8 w-8 rounded-full cursor-pointer font-bold text-md" onClick={()=> setMedia(null)}>
+              X
+            </div>
+          </div>
+        )}
+        {media?.type.includes("video") && previewUrl && (
+          <div className="relative">
+            <video src={previewUrl} controls />
+            <div className="absolute top-2  right-2 bg-black bg-opacity-50 text-white h-8 w-8 rounded-full cursor-pointer font-bold text-md " onClick={()=> setMedia(null)}>
+              X
+            </div>
+          </div>
+        )}
+        {isEditorOpen && previewUrl && (
+          <ImageEditor
+            onClose={() => setIsEditorOpen(false)}
+            previewUrl={previewUrl}
+            setting={setting}
+            setSetting={setSetting}
+          />
+        )}
         <div className="flex items-center justify-between flex-wrap mt-3">
           <div className="flex gap-5 flex-wrap">
             <input
@@ -122,7 +188,10 @@ const Share = () => {
               ref={fileInputRef}
               className="hidden"
               id="file"
+              onChange={handleMediaChange}
+              accept="image/*,video/*"
             />
+
             <label htmlFor="file">
               <ImageKit
                 path="icons/icons/image.svg"
