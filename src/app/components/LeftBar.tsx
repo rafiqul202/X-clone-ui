@@ -1,6 +1,6 @@
-import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import ImageKit from "./ImageKit";
 
 const menuLists = [
   {
@@ -71,17 +71,22 @@ const LeftBar = () => {
       <div className="flex flex-col gap-4 text-lg items-center xxl:items-start">
         {/* logo */}
         <Link href="/" className="p-2 rounded-full hover:bg-[#181818] ">
-          <Image src={"/icons/logo.svg"} alt="Logo" height={24} width={24} />
+          <ImageKit path={"/icons/icons/logo.svg"} alt="Logo" w={24} h={24} />
         </Link>
         {/* menu lists */}
-        <div className="flex flex-col gap-4 mt-5">
+        <div className="flex flex-col gap-4 mt-5 w-full">
           {menuLists.map(({ icon, id, link, name }) => (
             <Link
               href={link}
               key={id}
-              className="p-2 rounded-full hover:bg-[#181818] flex items-center gap-4 text-start"
+              className="p-2 rounded-full hover:bg-[#242424] flex items-center gap-4 text-start"
             >
-              <Image src={`/icons/${icon}`} alt={name} width={24} height={24} />
+              <ImageKit
+                path={`/icons/icons/${icon}`}
+                alt={name}
+                w={24}
+                h={24}
+              />
               <span className="hidden xxl:inline">{name}</span>
             </Link>
           ))}
@@ -91,11 +96,11 @@ const LeftBar = () => {
           href={"/"}
           className=" xxl:hidden bg-white text-black rounded-full font-bold w-11 h-11 flex items-center justify-center mx-auto"
         >
-          <Image
-            src={"/icons/post.svg"}
+          <ImageKit
+            path={"/icons/icons/post.svg"}
             alt="new Post"
-            width={24}
-            height={24}
+            w={24}
+            h={24}
           />
         </Link>
         <Link
@@ -110,11 +115,11 @@ const LeftBar = () => {
         <div className="flex justify-start gap-2">
           {/* image */}
           <div className="w-10 h-10 relative rounded-full overflow-hidden">
-            <Image
-              src={"/general/avatar.png"}
+            <ImageKit
+              path={"/general/general/avatar.png"}
               alt="Avatar"
-              height={45}
-              width={45}
+              h={45}
+              w={45}
               className="rounded-full ring-2 ring-gray-600 p-1"
             />
           </div>
