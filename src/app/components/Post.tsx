@@ -3,9 +3,11 @@ import ImageKit from "./ImageKit";
 import PostInfo from "./PostInfo";
 import PostInteractions from "./PostInteractions";
 import { getFileDetails } from "@/actions";
+import VideoKit from "./VideoKit";
 
 const Post = async () => {
   const fileDetails = await getFileDetails("6a806da05c7cd75eb8d00039");
+  // console.log(fileDetails);
   return (
     <div className="p-4 border-y-[1px] border-borderGray">
       {/* Post tyoe */}
@@ -51,12 +53,19 @@ const Post = async () => {
               Lorem, ipsum dolor sit amet consectetur adipisicing elit.
               Voluptatibus, voluptatem!
             </p>
-            {fileDetails && (
+            {fileDetails && fileDetails.fileType === "image" ? (
               <ImageKit
                 path={fileDetails.filePath}
                 alt="post"
                 w={fileDetails.width}
                 h={fileDetails.height}
+                className={
+                  fileDetails?.customMetadata?.sensitive ? "blur-lg" : ""
+                }
+              />
+            ) : (
+              <VideoKit
+                path={fileDetails.filepath}
                 className={
                   fileDetails?.customMetadata?.sensitive ? "blur-lg" : ""
                 }

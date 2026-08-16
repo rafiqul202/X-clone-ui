@@ -107,6 +107,7 @@ const Share = () => {
         },
         // Abort signal to allow cancellation of the upload if needed.
         abortSignal: abortController.signal,
+       
       });
       console.log("Upload response:", uploadResponse);
     } catch (error) {
@@ -155,12 +156,12 @@ const Share = () => {
               height={600}
             />
             <div
-              className="absolute top-2 left-2 bg-black bg-opacity-50 text-white py-1 px-4 rounded-full font-bold text-sm cursor-pointer"
+              className="absolute top-2 left-2 bg-black bg-opacity-50 text-white py-1 px-4 rounded-full font-bold text-sm cursor-pointer flex justify-center items-center"
               onClick={() => setIsEditorOpen(true)}
             >
               Edit
             </div>
-            <div className="absolute top-2  right-2 bg-black bg-opacity-50 text-white h-8 w-8 rounded-full cursor-pointer font-bold text-md" onClick={()=> setMedia(null)}>
+            <div className="absolute top-2  right-2 bg-black bg-opacity-50 text-white h-8 w-8 rounded-full cursor-pointer font-bold text-md flex items-center justify-center" onClick={()=> setMedia(null)}>
               X
             </div>
           </div>
@@ -168,7 +169,7 @@ const Share = () => {
         {media?.type.includes("video") && previewUrl && (
           <div className="relative">
             <video src={previewUrl} controls />
-            <div className="absolute top-2  right-2 bg-black bg-opacity-50 text-white h-8 w-8 rounded-full cursor-pointer font-bold text-md " onClick={()=> setMedia(null)}>
+            <div className="absolute top-2  right-2 bg-black bg-opacity-50 text-white h-8 w-8 rounded-full cursor-pointer font-bold text-md flex justify-center items-center " onClick={()=> setMedia(null)}>
               X
             </div>
           </div>

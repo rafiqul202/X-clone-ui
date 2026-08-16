@@ -19,7 +19,7 @@ const ImageKit = ({ path, w, h, alt, className, tr }: ImagType) => {
         ? { transformation: [{ width: `${w}`, height: `${h}` }] }
         : { width: w, height: h })}
       alt={alt}
-      loading="eager"
+      loading="lazy"
       className={className}
     />
   );
