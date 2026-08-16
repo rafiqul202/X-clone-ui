@@ -4,13 +4,14 @@ import PostInfo from "./PostInfo";
 import PostInteractions from "./PostInteractions";
 import { getFileDetails } from "@/actions";
 import VideoKit from "./VideoKit";
+import Link from "next/link";
 
-const Post = async () => {
+const Post = async ({ type }: { type?: "status" | "comment" }) => {
   const fileDetails = await getFileDetails("6a806da05c7cd75eb8d00039");
   // console.log(fileDetails);
   return (
     <div className="p-4 border-y-[1px] border-borderGray">
-      {/* Post tyoe */}
+      {/* Post type */}
       <div className="flex items-center gap-2 text-sm text-textGray mb-2 ">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -26,9 +27,16 @@ const Post = async () => {
         <span>Rafiqul hasan reposted</span>
       </div>
       {/* post content */}
-      <div className="flex gap-4">
+      {/* <div className="flex gap-4"> */}
+      <div className={`flex gap-4 ${type === "status" && "flex-col"}`}>
         {/* avatar */}
-        <div className="relative w-10 h-10 rounded-full overflow-hidden">
+        <div
+          className={`${
+            type === "status"
+              ? "hidden"
+              : "relative w-10 h-10 rounded-full overflow-hidden"
+          }`}
+        >
           <ImageKit
             path="general/general/avatar.png"
             alt="avatar"
@@ -38,41 +46,69 @@ const Post = async () => {
         </div>
         {/* content */}
         <div className="flex-1 flex flex-col gap-2">
-          {/* top */}
-          <div className="flex items-center justify-between gap-2">
-            <div className="flex items-center gap-2 flex-wrap">
-              <h1 className="text-md font-bold">Rafiqul Hasan</h1>
-              <span className="text-sm text-textGray">@rafiqul hasan</span>
-              <span className="text-sm text-textGray">1 day ago</span>
-            </div>
+          <div className="w-full flex justify-between">
+            <Link href={`/lamaWebDev`} className="flex gap-4">
+              <div
+                className={`${
+                  type !== "status" && "hidden"
+                } relative w-10 h-10 rounded-full overflow-hidden`}
+              >
+                <ImageKit
+                  path="general/general/avatar.png"
+                  alt="avatar"
+                  h={100}
+                  w={100}
+                />
+              </div>
+              <div
+                className={`flex items-center gap-2 flex-wrap ${
+                  type === "status" && "flex-col gap-0 !items-start"
+                }`}
+              >
+                <h1 className="text-md font-bold">Rafiqul Hasna</h1>
+                <span
+                  className={`text-textGray ${type === "status" && "text-sm"}`}
+                >
+                  rafiqulhasan@gmail.com
+                </span>
+                {type !== "status" && (
+                  <span className="text-textGray">1 day ago</span>
+                )}
+              </div>
+            </Link>
             <PostInfo />
           </div>
           {/* text and media */}
-          <div className="">
-            <p className="mb-3">
-              Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-              Voluptatibus, voluptatem!
-            </p>
-            {fileDetails && fileDetails.fileType === "image" ? (
-              <ImageKit
-                path={fileDetails.filePath}
-                alt="post"
-                w={fileDetails.width}
-                h={fileDetails.height}
-                className={
-                  fileDetails?.customMetadata?.sensitive ? "blur-lg" : ""
-                }
-              />
-            ) : (
-              <VideoKit
-                path={fileDetails.filepath}
-                className={
-                  fileDetails?.customMetadata?.sensitive ? "blur-lg" : ""
-                }
-              />
-            )}
-            <PostInteractions />
-          </div>
+          <Link href={`/rafiqulhasan/status/123`}>
+            <div className="">
+              <p className={`mb-3${type === "status" && "text-lg"}`}>
+                Lorem, ipsum dolor sit amet consectetur adipisicing elit.
+                Voluptatibus, voluptatem!
+              </p>
+              {fileDetails && fileDetails.fileType === "image" ? (
+                <ImageKit
+                  path={fileDetails.filePath}
+                  alt="post"
+                  w={fileDetails.width}
+                  h={fileDetails.height}
+                  className={
+                    fileDetails?.customMetadata?.sensitive ? "blur-lg" : ""
+                  }
+                />
+              ) : (
+                <VideoKit
+                  path={fileDetails.filepath}
+                  className={
+                    fileDetails?.customMetadata?.sensitive ? "blur-lg" : ""
+                  }
+                />
+              )}
+              {type === "status" && (
+                <span className="text-textGray">8:41 PM · Dec 5, 2024</span>
+              )}
+              <PostInteractions />
+            </div>
+          </Link>
         </div>
       </div>
     </div>

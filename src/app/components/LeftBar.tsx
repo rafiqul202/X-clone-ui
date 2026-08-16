@@ -93,7 +93,7 @@ const LeftBar = () => {
         </div>
         {/* button */}
         <Link
-          href={"/"}
+          href={`/compose/post`}
           className=" xxl:hidden bg-white text-black rounded-full font-bold w-11 h-11 flex items-center justify-center mx-auto"
         >
           <ImageKit
@@ -104,7 +104,7 @@ const LeftBar = () => {
           />
         </Link>
         <Link
-          href={"/"}
+          href={`/compose/post`}
           className="hidden xxl:block bg-white text-black rounded-2xl font-bold py-2 px-20"
         >
           Post
